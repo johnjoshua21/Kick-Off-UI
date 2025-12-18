@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { turfService } from '../../services/turfService';
 import { Plus, Edit, Trash2, MapPin, Clock, DollarSign, Phone, Building2 } from 'lucide-react';
 import TurfFormModal from '../../components/TurfFormModal';
-
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 const MyTurfs = () => {
   const { user } = useAuth();
   const [turfs, setTurfs] = useState([]);
@@ -128,15 +128,38 @@ const MyTurfs = () => {
 };
 
 const TurfCard = ({ turf, onEdit, onDelete }) => {
+  const imageUrl = turf.primaryImageUrl || (turf.imageUrls && turf.imageUrls[0]);
+   const fullImageUrl = imageUrl ? `${BASE_URL}${imageUrl}` : null;
+
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-      {/* Image Placeholder */}
-      <div className="h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-        <div className="text-white text-center">
-          <div className="text-4xl font-bold mb-2">🏟️</div>
-          <p className="text-lg font-semibold">{turf.type}</p>
+      {/* Image */}
+      {fullImageUrl ? (
+        <div className="h-48 overflow-hidden">
+          <img
+            src={fullImageUrl}
+            alt={turf.name}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              e.target.parentElement.innerHTML = `
+                <div class="h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                  <div class="text-white text-center">
+                    <div class="text-4xl font-bold mb-2">🏟️</div>
+                    <p class="text-lg font-semibold">${turf.type}</p>
+                  </div>
+                </div>
+              `;
+            }}
+          />
         </div>
-      </div>
+      ) : (
+        <div className="h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+          <div className="text-white text-center">
+            <div className="text-4xl font-bold mb-2">🏟️</div>
+            <p className="text-lg font-semibold">{turf.type}</p>
+          </div>
+        </div>
+      )}
 
       {/* Content */}
       <div className="p-5">

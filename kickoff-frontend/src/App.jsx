@@ -7,7 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 
 // User Components
-// Chechking git commit
+// Checking git commit
 import UserLayout from './components/UserLayout';
 import BrowseTurfs from './pages/user/BrowseTurfs';
 import MyBookings from './pages/user/MyBookings';
